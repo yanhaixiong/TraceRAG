@@ -1,0 +1,34 @@
+conversation_directories:
+  LLM_output: output/LLM_output
+  user_query_analyze_path: output/LLM_output/analyze
+  user_query_retrieval_filtered_path: output/LLM_output/retrieve/user_query_retrieve_filtered_result
+  user_query_retrieval_filtered_split_path: output/LLM_output/retrieve/split_filtered_result
+  user_query_retrieval_save_path: output/LLM_output/retrieve/user_query_retrieve_result
+directories:
+  apk_info_dir: output\APK_info.txt
+  java_dir: output\reversedAPK\sources
+  reversed_apk_dir: output\reversedAPK
+env:
+  LANGCHAIN_API_KEY: 
+  LANGCHAIN_ENDPOINT: 
+  LANGCHAIN_TRACING_V2: 'true'
+  jadx_bin: jadx-1.5.1\bin
+  openai_api_key: 
+  jadx_bat: jadx-1.5.1\bin\jadx.bat
+llm:
+  cleaning_model: gpt-4o-2024-11-20
+  embedding_model: text-embedding-ada-002
+  model_name: gpt-4o
+  model_o3_mini: o3-mini
+  summary_model: gpt-4o-2024-11-20
+  temperature: 0
+openai:
+  api_key: 
+weaviate:
+  api_key: 
+  distance: 0.25
+  # index_name: TEST_00B1288481043E9BE0166D60A577C8BD076E6E9BAC4B4AFC5702A71B74F93115
+  # index_name: Java_Vec_DB_Blood_6000__with_classname_Test
+  index_name: TEST_000C5A8A35C55183A4718192E328E68B44D5457AA99E37F39B2B1AA16644E8FD
+  retrieve_num_limit: 5
+  url: 
