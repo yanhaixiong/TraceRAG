@@ -1,0 +1,49 @@
+{
+  "Information_Theft": {
+    "description": "Questions related to theft of sensitive user information.",
+    "questions": [
+      "Does the application read SMS messages or contact information from the device?",
+      "Is there any evidence of location tracking within the application?",
+      "Does the code attempt to collect unique device identifiers such as IMEI, IMSI, or MAC address?",
+      "Does the application use screen recording or screenshot features to capture user activity?"
+    ]
+  },
+  "Monetary_Abuse": {
+    "description": "Questions related to abuse of financial transactions or charges.",
+    "questions": [
+      "Does the application send premium-rate SMS messages without user consent?",
+      "Are there any silent or hidden phone calls made by the application?",
+      "Does the app include any misleading UI elements designed to trick users into clicking ads or subscribing to services?",
+      "Is there any suspicious manipulation of in-app purchase or payment logic by the application?"
+    ]
+  },
+  "Privilege_Abuse_and_Remote_Control": {
+    "description": "Questions related to excessive privilege use and remote code execution.",
+    "questions": [
+      "Does the application attempt to acquire Device Administrator or Accessibility Service privileges?",
+      "Is there any mechanism that allows the application to receive and execute remote commands?",
+      "Does the application implement persistent mechanisms such as auto-start at boot or background services that cannot be killed easily?",
+      "Is there any use of dynamic code loading, reflection, or anti-analysis techniques within the application?"
+    ]
+  },
+  "External_Connections_and_Malicious_Downloads": {
+    "description": "Questions related to external communication and downloading malicious content.",
+    "questions": [
+      "Does the application access suspicious external URLs—either hardcoded or dynamically generated—that point to suspicious domains or IP addresses?",
+      "Does the application initiate automatic downloads of files from the internet without user interaction?",
+      "Does the application use obfuscated or encrypted URLs to evade static analysis?",
+      "Are there any scripts or commands executed after downloading remote content ?"
+    ]
+  },
+  "Exploit_Based_Rooting_and_Privilege_Escalation": {
+    "description": "Questions related to rooting or gaining unauthorized system privileges.",
+    "questions": [
+      "Does the application contain or load native libraries (e.g., .so files) that attempt to exploit known Android system vulnerabilities?",
+      "Is there evidence of the application executing shell commands like su, mount, chmod, or setuid that may indicate root privilege escalation?",
+      "Does the application check for root status or manipulate system partitions (e.g., /system, /data)?",
+      "Are there references to known rooting toolkits (e.g., libsuperuser, Framaroot, Towelroot, Kingroot) embedded in the application?",
+      "Does the application use JNI or NDK components to interact with system-level processes or invoke dangerous native system calls?",
+      "Is there any sign that the application attempts to bypass SELinux or modifies system configurations related to security policies?"
+    ]
+  }
+}

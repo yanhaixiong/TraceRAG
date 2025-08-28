@@ -1,0 +1,29 @@
+{
+    "Information_Theft_and_Abuse": {
+      "description": "Questions related to unauthorized access to sensitive data and suspicious network behavior.",
+      "questions": [
+        "Does the application access or collect sensitive user data (e.g., SMS, contacts, location, or device identifiers)?",
+        "Does the application capture user activity through screen recording or screenshots?",
+        "Does the application connect to suspicious external URLs or perform background downloads without user interaction?",
+        "Is obfuscation or encryption used to conceal communication endpoints or downloaded content?"
+      ]
+    },
+    "Monetary_Fraud_and_Financial_Abuse": {
+      "description": "Questions related to hidden charges, deceptive UI behavior, or manipulation of financial features.",
+      "questions": [
+        "Does the application send messages or make calls that may incur charges without user consent?",
+        "Does the UI mislead users into clicking ads or subscribing to services?",
+        "Is there evidence of tampering with in-app purchases or payment processes?"
+      ]
+    },
+    "Privilege_Abuse_and_System_Exploitation": {
+      "description": "Questions related to misuse of system privileges, remote control, and attempts to exploit the Android system.",
+      "questions": [
+        "Does the application request elevated privileges (e.g., Accessibility or Device Administrator) or attempt to maintain persistence?",
+        "Does the application support remote command execution or include dynamic code loading and anti-analysis techniques?",
+        "Is there evidence of root-level activity, such as executing system commands or interacting with system partitions?",
+        "Does the application use native libraries or known exploits to escalate privileges or bypass system security policies?"
+      ]
+    }
+  }
+  
