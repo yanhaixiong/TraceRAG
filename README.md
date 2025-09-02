@@ -1,9 +1,14 @@
+---
+
 # 🔍 APK Malicious Behavior Analyzer (TraceRAG)
-This project leverages **Large Language Models (LLMs)** to automatically analyze malicious behaviors in Android APKs through code retrieval, cleaning, summarization, and reasoning.
+
+This project leverages **Large Language Models (LLMs)** to analyze Android APKs and detect potential malicious behaviors. It integrates APK reverse engineering, code preprocessing, vector database retrieval, and multi-phase LLM reasoning to generate structured security reports.
+
+---
 
 ## 🚀 Usage
 
-Run the following command in the project root directory:
+Run the following command in the project’s root directory:
 
 ```bash
 python -m src.main "path_to_apk.apk" "IndexName"
@@ -11,111 +16,125 @@ python -m src.main "path_to_apk.apk" "IndexName"
 
 **Parameters**
 
-* `path_to_apk.apk`: Path to the APK file to be analyzed.
-* `IndexName`: A unique name for storing results in the vector database.
+* `path_to_apk.apk`: The APK file to be analyzed.
+* `IndexName`: The name under which the app’s information is stored in the vector database.
 
-⚠️ **Note**: The first letter of `IndexName` must be capitalized (Weaviate requirement).
-💡 **Tip**: Weaviate merges content under the same index name. Always use a **new index name** for each APK to avoid mixing results.
+⚠️ **Important**: The first letter of `IndexName` must be capitalized (Weaviate requirement).
+💡 **Tip**: Weaviate appends new content to existing entries. To ensure repeatable experiments and avoid mixing new/old data, assign a **new `IndexName`** for every APK analysis.
 
 ---
 
 ## 📁 Project Structure
 
-```
-project-root/
-│── jadx-1.5.1/                     # APK decompiler (built-in)
-│── output/
-│   ├── reverseAPK/                 # Decompiled APK files & preprocessing results
-│   ├── APK_info.txt                # Extracted app information
-│   └── LLM_output/
-│       ├── Question1/
-│       │   ├── retrieve/           # Retrieved code snippets
-│       │   └── analyze/            # LLM analysis results
-│       ├── Question2/
-│       ├── ...
-│       └── question_report.txt     # Combined report across all questions
-│── src/
-│   ├── preprocess/
-│   │   ├── java_code_split.py      # Split Java code into methods
-│   │   ├── code_cleaning_summarization.py # Clean & summarize code
-│   │   ├── store_vector_database.py# Store vectors in Weaviate
-│   │   ├── pipeline.py             # Full preprocessing pipeline
-│   │   ├── apk_decompile.py        # APK decompilation
-│   │   └── apk_info_extract.py     # Extract basic APK info
-│   ├── conversation/
-│   │   ├── first_phase.py          # Code retrieval from vector DB
-│   │   ├── first_phase_result_process.py # Prepare code for LLM input
-│   │   └── second_phase.py         # LLM analysis & report generation
-│   ├── postprocess/
-│   │   ├── combine_single_question_report.py # Merge multiple analyses per question
-│   │   ├── final_report_generation.py        # Consolidated report
-│   │   └── txt2markwon_and_html.py          # Export report to Markdown/HTML
-│   ├── config.py                   # Load YAML configuration
-│   └── main.py                     # Project entry point
-└── (dev files...)                  # Extra development scripts
-```
+### Root Level
+
+* **jadx-1.5.1/**
+  A widely used APK decompiler. Included here for convenience to directly decompile APKs into Java source code.
+
+* **output/**
+  This folder is created automatically after analysis. It contains:
+
+  * **reverseAPK/**: Decompiled APK (via JADX), including all Java code, resources, and preprocessing results.
+  * **APK\_info.txt**: Extracted metadata (e.g., package name, version) for quick identification.
+  * **LLM\_output/**: Organized results of LLM analysis.
+
+    * Each question in `src/Prompt_and_Question/questions.json` generates a dedicated subfolder:
+
+      * **retrieve/**: Code snippets retrieved for that question.
+      * **analyze/**: LLM’s reasoning results on retrieved snippets.
+    * **question\_report.txt**: Aggregated report across all predefined questions.
+
+---
+
+### Source Code (src/)
+
+* **preprocess/**
+  The first step after APK decompilation. Four main scripts are executed sequentially:
+
+  * `java_code_split.py`: Splits Java source files into methods to avoid exceeding LLM input limits.
+  * `code_cleaning_summarization.py`: Cleans irrelevant code (e.g., boilerplate) and generates short descriptions for each method.
+  * `store_vector_database.py`: Stores descriptions + corresponding code snippets into the Weaviate vector database.
+  * `pipeline.py`: Organizes and executes the full preprocessing workflow.
+  * `apk_decompile.py`: Handles APK decompilation using JADX.
+  * `apk_info_extract.py`: Extracts app metadata (e.g., package, permissions).
+
+* **conversation/**
+  Implements a two-phase reasoning process:
+
+  * `first_phase.py`: Retrieves candidate code snippets from the vector database based on prompts/questions.
+  * `first_phase_result_process.py`: Splits and formats the retrieved snippets for further analysis.
+  * `second_phase.py`: Calls LLM to analyze snippets and generates per-question reports.
+
+* **postprocess/**
+  Consolidates partial results into human-readable reports:
+
+  * `combine_single_question_report.py`: Merges multiple snippet analyses into one report for a given question.
+  * `final_report_generation.py`: Combines all question reports into one final security report.
+  * `txt2markwon_and_html.py`: Converts results into Markdown and HTML formats for easy sharing.
+
+* **config.py**
+  Loads parameters (e.g., API keys, database config) from YAML.
+
+* **main.py**
+  Project entry point.
+
+* **(dev files)**
+  Additional experimental or helper scripts used during development.
 
 ---
 
 ## 🧠 LLM Questions
 
-* Defined in: `src/Prompt_and_Question/questions.json`
-* Each question produces:
+The file `src/Prompt_and_Question/questions.json` defines the **set of questions** used to analyze malicious behaviors (e.g., sensitive API usage, dynamic loading, privilege escalation).
 
-  * **retrieve/**: Relevant code snippets
-  * **analyze/**: LLM’s reasoning and conclusions
-* You can extend this list with new questions as experiments evolve.
+For each question:
+
+* **retrieve/** contains relevant code snippets.
+* **analyze/** contains the LLM’s interpretation and reasoning.
+
+These questions are extendable, allowing the framework to adapt as experiments evolve.
 
 ---
 
 ## 📌 Notes
 
-* All decompiled code, retrievals, and LLM outputs are organized automatically.
-* The **final output** includes a consolidated report summarizing findings across all questions.
-* Reports can be exported to **Markdown** or **HTML** for easy review and sharing.
+* All steps—decompilation, preprocessing, retrieval, and analysis—are automated once you run `main.py`.
+* The **final output** is a structured report that consolidates findings across all questions.
+* Results can be exported into **Markdown** and **HTML** formats for convenient review and presentation.
 
 ---
 
 ## 📊 Experimental Data (to be included)
 
 * **TraceRAG\_result.xlsx**
-  Contains information on analyzed APKs (benign + malicious):
+  Records benign APKs used in experiments, with columns:
 
   * SHA256
-  * Reported result
+  * Report result
   * Verified result
-  * Detected malicious behavior categories
-  * Investigation details
+  * Detected malicious behavior categories (if any)
+  * Detailed investigation notes
 
 * **TraceRAG\_result.zip**
-
-  * Original (uncleaned) source code snippets used in experiments
+  Contains raw (uncleaned) source code snippets of APKs used in the experiments.
 
 * **Reports/**
-
-  * Full reports of analyzed APKs
+  Stores the generated reports of APKs.
 
 * **queries.txt**
-
-  * Complete record of queries submitted to the LLM
+  Contains all queries submitted to the LLM during experiments.
 
 ---
 
-## 📌 Future Additions
+## 🔮 Future Additions
 
-* **Expanded APK experiment dataset (Excel):**
+* Expanded **APK experiment dataset** (Excel) with metadata:
 
-  * SHA256
-  * Size
-  * Malware/benign label
-  * Malware category
+  * SHA256, size, malware/benign label
+  * Malware category (if applicable)
   * Reverse engineering feasibility
-  * Inclusion in experiments
-  * Number of Java files
-  * Number of chunks
-  * Other relevant metadata
+  * Whether included in experiments
+  * Number of Java files / chunks (if processed)
+  * Other useful metadata
 
-* **Cleaned code snippets + summarizations**
-
-  * Processed versions of APK code used in experiments
-
+* **Cleaned code snippets + summaries** of APKs for systematic benchmarking.
