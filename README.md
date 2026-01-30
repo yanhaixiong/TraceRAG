@@ -2,7 +2,7 @@
 
 # 🔍 APK Malicious Behavior Analyzer (TraceRAG)
 
-This project leverages **Large Language Models (LLMs)** to analyze Android APKs and detect potential malicious behaviors. It integrates APK reverse engineering, code preprocessing, vector database retrieval, and multi-phase LLM reasoning to generate structured security reports. Please refer to [link](https://arxiv.org/abs/2509.08865) for our paper under review titled `TraceRAG: A LLM-Based Framework for Explainable Android Malware Detection and Behavior Analysis`. 
+This project leverages **Large Language Models (LLMs)** to analyze Android APKs and detect potential malicious behaviors. It integrates APK reverse engineering, code preprocessing, vector database retrieval, and multi-phase LLM reasoning to generate structured security reports. Please refer to [link](https://arxiv.org/abs/2509.08865) for our paper under review titled `TraceRAG A LLM-Based Framework for Explainable Android Malware Detection and Behavior Analysis`. 
 
 ---
 
